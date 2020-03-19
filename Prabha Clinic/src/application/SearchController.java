@@ -25,6 +25,7 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -39,6 +40,8 @@ public class SearchController implements Initializable {
 	@FXML TextField billNoTextField, nameTextField;
 	@FXML Label notificationLabel, changePaymentStatusLabel, salesLabel, totalLabel;
 	@FXML CheckBox searchExactNameCheckBox;
+	@FXML Button switchDeleteRestoreButton;
+	@FXML Button deleteRestoreItemButton;
 	
 	@FXML TableView<BillItems> table;
 	@FXML TableColumn<BillItems,String> billNo_column; 
@@ -48,11 +51,13 @@ public class SearchController implements Initializable {
 	@FXML TableColumn<BillItems,String> paymentStatus_column; 
 	@FXML TableColumn<BillItems,String> quantity_column;
 	
+	String shouldWeNotDisplayDeleted = new String("1"); 
 	String selectedItem;
 	boolean searchCheckboxSelected = false;
 	SearchModel model = new SearchModel();
 	ObservableList<BillItems> tableItems;
 	ObservableList<String> dateComboItems = FXCollections.observableArrayList();
+	int displayDeletedFlag = 0;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -70,7 +75,6 @@ public class SearchController implements Initializable {
 
 	private void addingFocusListeners() {
 		addingBillTextFieldFocusListener();
-		
 	}
 
 	public void addingBillTextFieldFocusListener() {
@@ -84,7 +88,7 @@ public class SearchController implements Initializable {
 						dateCombo.getSelectionModel().clearSelection();
 						betweenStartDate.setValue(null);
 						betweenEndDate.setValue(null);
-						tableItems = model.getBillItems();
+						tableItems = model.getBillItems(shouldWeNotDisplayDeleted);
 						table.setItems(tableItems);
 						System.out.println("Focus+");
 					}
@@ -162,7 +166,7 @@ public class SearchController implements Initializable {
 		totalAmount_column.setCellValueFactory(cellData -> cellData.getValue().totalAmountProperty());
 		paymentStatus_column.setCellValueFactory(cellData -> cellData.getValue().paymentStatusProperty());
 		quantity_column.setCellValueFactory(cellData -> cellData.getValue().quantityProperty());
-		tableItems = model.getBillItems();
+		tableItems = model.getBillItems(shouldWeNotDisplayDeleted);
 		table.setItems(tableItems);
 	}
 
@@ -342,7 +346,7 @@ public class SearchController implements Initializable {
 	
 	public void onChangePaymentMousePressed(MouseEvent me) {
 		model.changePayment(table.getSelectionModel().getSelectedItem().getBillNo(),table.getSelectionModel().getSelectedItem().getPaymentStatus());
-		tableItems = model.getBillItems();
+		tableItems = model.getBillItems(shouldWeNotDisplayDeleted);
 		table.setItems(tableItems);
 		changePaymentStatusLabel.setText("");
 	}
@@ -362,7 +366,7 @@ public class SearchController implements Initializable {
 		betweenStartDate.setValue(null);
 		betweenEndDate.setValue(null);
 		searchExactNameCheckBox.setSelected(false);
-		tableItems = model.getBillItems();
+		tableItems = model.getBillItems(shouldWeNotDisplayDeleted);
 		table.setItems(tableItems);
 		model.clearTempBuffer();
 	}
@@ -370,5 +374,46 @@ public class SearchController implements Initializable {
 	public void onClickClearSelectionLabel(MouseEvent me) {
 		table.getSelectionModel().clearSelection();
 		selectedItem = null;
+	}
+	
+//	public void onClickShowDeletedButton(ActionEvent ae) {
+//		if(shouldWeNotDisplayDeleted.equals("1")) {
+//			shouldWeNotDisplayDeleted = new String("0");
+//			switchDeleteRestoreButton.setText("Show Existing Items");
+//			deleteRestoreItemButton.setText("Restore Selected Item");
+//		} else {
+//			shouldWeNotDisplayDeleted = new String("1");
+//			switchDeleteRestoreButton.setText("Show Deleted Items");
+//			deleteRestoreItemButton.setText("Delete Selected Item");
+//		}
+//		changePaymentStatusLabel.setText("");
+//		notificationLabel.setText("");
+//		billNoTextField.setText("");
+//		nameTextField.setText("");
+//		dateCombo.getSelectionModel().clearSelection();
+//		betweenStartDate.setValue(null);
+//		betweenEndDate.setValue(null);
+//		searchExactNameCheckBox.setSelected(false);
+//		tableItems = model.getBillItems(shouldWeNotDisplayDeleted);
+//		table.setItems(tableItems);
+//		model.clearTempBuffer();
+//		
+//	}
+	
+	public void onClickDeleteSelectedItem(ActionEvent ae) {
+		if(table.getSelectionModel().getSelectedItem() == null) {
+			return;
+		}
+		model.changeDeleteFlag(table.getSelectionModel().getSelectedItem().getBillNo());
+		table.getSelectionModel().clearSelection();
+		AnchorPane anchorPane;
+		try {
+			anchorPane = FXMLLoader.load(getClass().getResource("Search.fxml"));
+			pane.getChildren().setAll(anchorPane);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+		
+		
 	}
 }

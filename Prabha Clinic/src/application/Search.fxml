@@ -63,7 +63,7 @@
                   <Font size="16.0" />
                </font>
             </Label>
-            <Button fx:id="deleteRestoreItemButton" layoutX="701.0" layoutY="143.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="213.0" style="-fx-background-color: red;" text="Delete Selected Item" textFill="WHITE">
+            <Button fx:id="deleteRestoreItemButton" layoutX="701.0" layoutY="143.0" mnemonicParsing="false" onAction="#onClickDeleteSelectedItem" prefHeight="34.0" prefWidth="213.0" style="-fx-background-color: red;" text="Delete Selected Item" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
@@ -73,16 +73,6 @@
                   <Font name="Segoe UI Semilight" size="22.0" />
                </font>
             </Label>
-            <Button fx:id="deleteRestoreAllButton" layoutX="701.0" layoutY="190.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="213.0" style="-fx-background-color: #ff3300;" text="Delete All Displayed Items" textFill="WHITE">
-               <font>
-                  <Font name="System Bold" size="15.0" />
-               </font>
-            </Button>
-            <Button fx:id="switchDeleteRestoreButton" layoutX="701.0" layoutY="237.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="213.0" style="-fx-background-color: #0099ff;" text="Show Deleted Items" textFill="WHITE">
-               <font>
-                  <Font name="System Bold" size="15.0" />
-               </font>
-            </Button>
             <Label fx:id="deleteRestoreLabel1" layoutX="786.0" layoutY="312.0" text="Print">
                <font>
                   <Font name="Segoe UI Semilight" size="22.0" />

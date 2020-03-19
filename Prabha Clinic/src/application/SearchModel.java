@@ -37,7 +37,7 @@ public class SearchModel {
 	Connection connection;
 	Calendar todayCalender = Calendar.getInstance();
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-	String defaultQuery = "SELECT BILL_ID,CUSTOMER_NAME,DATE,TOTAL_AMT,PAYMENT_STATUS,QUANTITY FROM BILL B WHERE CUSTOMER_NAME IS NOT NULL ORDER BY BILL_ID DESC";
+	String defaultQuery = "SELECT BILL_ID,CUSTOMER_NAME,DATE,TOTAL_AMT,PAYMENT_STATUS,QUANTITY,DELETEFLAG FROM BILL B WHERE CUSTOMER_NAME IS NOT NULL ORDER BY BILL_ID DESC";
 	String commonQuery;
 	
 	public ObservableList<String> getListItems() {
@@ -62,7 +62,7 @@ public class SearchModel {
 	}
 
 
-	public ObservableList<BillItems> getBillItems() {
+	public ObservableList<BillItems> getBillItems(String flag) {
 
 		ObservableList<BillItems> returnItems = FXCollections.observableArrayList();
 		BillItems tempItem;
@@ -80,6 +80,9 @@ public class SearchModel {
 				String totalAmt = Integer.toString(rs.getInt("TOTAL_AMT"));
 				String paymentStatus = rs.getString("PAYMENT_STATUS");
 				String quantity = rs.getString("QUANTITY");
+				String deleteFlag = Integer.toString(rs.getInt("DELETEFLAG"));
+				
+
 				
 				totalUnits+=Integer.parseInt(quantity);
 				totalAmount+=Integer.parseInt(totalAmt);
@@ -311,6 +314,23 @@ public class SearchModel {
 		else
 			newPaymentStatus = "PAID";
 		String query = "UPDATE BILL SET PAYMENT_STATUS = '" + newPaymentStatus + "', DATE = (SELECT date('now')) WHERE BILL_ID = " + billId;
+		System.out.println(query);
+		Statement stmt;
+		try {
+			stmt = connection.createStatement();
+			stmt.executeUpdate(query);
+			connection.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		System.out.println("IndividualBillModel: Bill Model has retrieved bill details from Database");
+		
+	}
+	
+	public void changeDeleteFlag(String billId) {
+		connection = SQLiteConnection.Connector();
+
+		String query = "DELETE FROM BILL WHERE BILL_ID = " + billId;
 		System.out.println(query);
 		Statement stmt;
 		try {
