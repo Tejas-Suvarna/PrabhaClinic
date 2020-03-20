@@ -10,8 +10,9 @@ public class Item {
 	public SimpleStringProperty amt;
 	public SimpleStringProperty dst;
 	public SimpleStringProperty value;
+	public SimpleStringProperty trade;
 	public Item(String sr, String desc, String qty, String rate, String amt, String dst,
-			String value) {
+			String value, String trade) {
 		this.sr = new SimpleStringProperty(sr);
 		this.desc = new SimpleStringProperty(desc);
 		this.qty = new SimpleStringProperty(qty);
@@ -19,6 +20,7 @@ public class Item {
 		this.amt = new SimpleStringProperty(amt);
 		this.dst = new SimpleStringProperty(dst);
 		this.value = new SimpleStringProperty(value);
+		this.trade = new SimpleStringProperty(trade);
 	}
 	
 	public Item() {
@@ -29,6 +31,7 @@ public class Item {
 		this.amt = new SimpleStringProperty();
 		this.dst = new SimpleStringProperty();
 		this.value = new SimpleStringProperty();
+		this.trade = new SimpleStringProperty();
 	}
 	
 	public final SimpleStringProperty srProperty() {
@@ -41,6 +44,18 @@ public class Item {
 	
 	public final void setSr(final String sr) {
 		this.srProperty().set(sr);
+	}
+	
+	public final SimpleStringProperty tradeProperty() {
+		return this.trade;
+	}
+	
+	public final String getTrade() {
+		return this.tradeProperty().get();
+	}
+	
+	public final void setTrade(final String trade) {
+		this.tradeProperty().set(trade);
 	}
 	
 	public final SimpleStringProperty descProperty() {
@@ -114,6 +129,7 @@ public class Item {
 	public final void setValue(final String value) {
 		this.valueProperty().set(value);
 	}
-	
+
+
 	
 }

@@ -39,15 +39,16 @@
                   <Font name="Segoe UI Semilight" size="18.0" />
                </font>
             </Label>
-            <TableView fx:id="table" layoutX="292.0" layoutY="195.0" onMouseClicked="#onTableItemClicked" prefHeight="225.0" prefWidth="605.0">
+            <TableView fx:id="table" layoutX="292.0" layoutY="195.0" onMouseClicked="#onTableItemClicked" prefHeight="225.0" prefWidth="643.0">
               <columns>
-                <TableColumn fx:id="sr_column" prefWidth="32.0" text="Sr." />
-                <TableColumn fx:id="description_column" prefWidth="179.0" text="Description of Product" />
-                  <TableColumn fx:id="qty_column" prefWidth="42.0" text="Qty" />
-                  <TableColumn fx:id="rate_column" prefWidth="73.0" text="Rate/Tin" />
-                  <TableColumn fx:id="amount_quantity" prefWidth="77.0" text="Amount" />
-                  <TableColumn fx:id="less_discount_quantity" prefWidth="93.0" text="Less Discount" />
-                  <TableColumn fx:id="value_of_supply_column" prefWidth="108.0" text="Value of Supply" />
+                <TableColumn fx:id="sr_column" prefWidth="20.0" text="Sr." />
+                <TableColumn fx:id="description_column" prefWidth="183.0" text="Description of Product" />
+                  <TableColumn fx:id="qty_column" minWidth="5.0" prefWidth="47.0" text="Qty" />
+                  <TableColumn fx:id="rate_column" prefWidth="61.0" text="Rate/Tin" />
+                  <TableColumn fx:id="trade_column" prefWidth="68.0" text="Trade price" />
+                  <TableColumn fx:id="amount_quantity" prefWidth="55.0" text="Amount" />
+                  <TableColumn fx:id="less_discount_quantity" minWidth="0.0" prefWidth="92.0" text="Discount" />
+                  <TableColumn fx:id="value_of_supply_column" prefWidth="99.0" text="Value of Supply" />
               </columns>
             </TableView>
             <Label layoutX="429.0" layoutY="23.0" text="Billing">

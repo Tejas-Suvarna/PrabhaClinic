@@ -80,7 +80,7 @@ public class SearchModel {
 				String totalAmt = Integer.toString(rs.getInt("TOTAL_AMT"));
 				String paymentStatus = rs.getString("PAYMENT_STATUS");
 				String quantity = rs.getString("QUANTITY");
-				String deleteFlag = Integer.toString(rs.getInt("DELETEFLAG"));
+				//String deleteFlag = Integer.toString(rs.getInt("DELETEFLAG"));
 				
 
 				
@@ -313,8 +313,7 @@ public class SearchModel {
 			newPaymentStatus = "PENDING";
 		else
 			newPaymentStatus = "PAID";
-		String query = "UPDATE BILL SET PAYMENT_STATUS = '" + newPaymentStatus + "', DATE = (SELECT date('now')) WHERE BILL_ID = " + billId;
-		System.out.println(query);
+		String query = "UPDATE BILL SET PAYMENT_STATUS = '" + newPaymentStatus + "' WHERE BILL_ID = " + billId;
 		Statement stmt;
 		try {
 			stmt = connection.createStatement();

@@ -73,6 +73,7 @@ public class BillingController implements Initializable{
 	@FXML	TableColumn<Item,String> amount_quantity;
 	@FXML	TableColumn<Item,String> less_discount_quantity;
 	@FXML	TableColumn<Item,String> value_of_supply_column;
+	@FXML	TableColumn<Item,String> trade_column;
 
 	
 	public void loadItemComboBoxContents() {
@@ -152,7 +153,7 @@ public class BillingController implements Initializable{
 		        }
 				setValueOfSupply();
 				try {							
-					if((Integer.parseInt(discountTextField.getText()) > (Integer.parseInt(model.getItemPrice(itemComboBox.getSelectionModel().getSelectedIndex()))*Integer.parseInt(quantityTextField.getText())))) {
+					if((Integer.parseInt(discountTextField.getText()) > (Integer.parseInt(model.getItemPrice(itemComboBox.getSelectionModel().getSelectedIndex()))))) {
 						while(Integer.parseInt(discountTextField.getText()) > Integer.parseInt(model.getItemPrice(itemComboBox.getSelectionModel().getSelectedIndex()))*Integer.parseInt(quantityTextField.getText())) {
 							discountTextField.setText(discountTextField.getText().substring(0, discountTextField.getText().length() - 1));
 							discount = Integer.parseInt(discountTextField.getText());
@@ -178,6 +179,7 @@ public class BillingController implements Initializable{
 		amount_quantity.setCellValueFactory(cellData -> cellData.getValue().amtProperty());
 		less_discount_quantity.setCellValueFactory(cellData -> cellData.getValue().dstProperty());
 		value_of_supply_column.setCellValueFactory(cellData -> cellData.getValue().valueProperty());
+		trade_column.setCellValueFactory(cellData -> cellData.getValue().tradeProperty());
 		table.setItems(items);
 		setInvoiceNumber();
 		loadItemComboBoxContents();
@@ -362,9 +364,9 @@ public class BillingController implements Initializable{
 //			return;
 //		}
 
-			float totAmt = Float.parseFloat(model.getItemPrice(itemComboBox.getSelectionModel().getSelectedIndex()))*Integer.parseInt(quantityTextField.getText());
-			float valueOfSupply = totAmt - discount;	
-			Item item = new Item(Integer.toString(sr++), itemNames.get(itemComboBox.getSelectionModel().getSelectedIndex()), quantityTextField.getText(), model.getItemPrice(itemComboBox.getSelectionModel().getSelectedIndex()), Float.toString(totAmt), Integer.toString(discount) ,Float.toString(valueOfSupply) );
+			float totAmt = Float.parseFloat(Integer.toString(Integer.parseInt(discountTextField.getText())*Integer.parseInt(quantityTextField.getText())));
+			float valueOfSupply = totAmt;	
+			Item item = new Item(Integer.toString(sr++), itemNames.get(itemComboBox.getSelectionModel().getSelectedIndex()), quantityTextField.getText(), model.getItemPrice(itemComboBox.getSelectionModel().getSelectedIndex()), Float.toString(totAmt), Integer.toString((Integer.parseInt(model.getItemPrice(itemComboBox.getSelectionModel().getSelectedIndex())) - discount)*(Integer.parseInt(quantityTextField.getText()))) ,Float.toString(valueOfSupply) , Integer.toString(discount));
 			if(!items.isEmpty()) {	
 				try {			
 					Item tempItem;
@@ -532,7 +534,7 @@ public class BillingController implements Initializable{
 			if(table.getSelectionModel().getSelectedItem() != null) {
 				Item i = table.getSelectionModel().getSelectedItem();
 				quantityTextField.setText(i.getQty());
-				discountTextField.setText(i.getRate());
+				discountTextField.setText(i.getDst()); /* OLD ONE WAS discountTextField.setText(i.getRate()); */
 			}	
 		}
 		for(Item i : table.getItems()) {
@@ -576,7 +578,7 @@ public class BillingController implements Initializable{
 			}
 			if(!discountTextField.getText().equals("") || discountTextField.getText() == null || Integer.parseInt(discountTextField.getText()) >= 0)
 				discount = Integer.parseInt(discountTextField.getText());
-			valueOfSupplyLabel.setText("Value of Supply: " + Integer.toString(-discount + Integer.parseInt(quantityTextField.getText()) * Integer.parseInt(priceLabel.getText().substring(7).trim())));
+			valueOfSupplyLabel.setText("Value of Supply: " + Integer.toString(Integer.parseInt(quantityTextField.getText()) * (discount)));
 		}
 		catch(Exception e) {
 			System.out.println("Expection " + e.getMessage() + " handled");

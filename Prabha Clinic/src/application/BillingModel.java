@@ -138,6 +138,8 @@ public class BillingModel {
 		
 		String query = "UPDATE BILL SET CUSTOMER_NAME = " + "'" + customerName + "'" + ", DATE = (SELECT date('now'))" + ", TOTAL_AMT = " + grandTotal + ", PAYMENT_STATUS = '" + paymentStatus + "', QUANTITY = " + salesQuantity + " WHERE CUSTOMER_NAME IS NULL";
 		String query2 = "INSERT INTO BILL (Customer_Name,Date) VALUES(NULL,NULL);";
+		System.out.println(query);
+		System.out.println(query2);
 		Statement stmt;
 		salesQuantity=0;
 		try {
@@ -167,7 +169,7 @@ public class BillingModel {
 				for(int i = 0; i <items.size(); i++) {
 					Item item = items.get(i);
 					salesQuantity+=Integer.parseInt(item.getQty());
-					query = "INSERT INTO CART VALUES(" + Integer.toString(Integer.parseInt(invoice)) + "," + "'" + item.getDesc() + "'" + "," + item.getRate() + "," + item.getQty() + "," + item.getDst() + ")";
+					query = "INSERT INTO CART VALUES(" + Integer.toString(Integer.parseInt(invoice)) + "," + "'" + item.getDesc() + "'" + "," + item.getRate() + "," + item.getQty() + "," + item.getDst() + "," + item.getTrade() + ")";
 					stmt.executeUpdate(query);
 					System.out.println("BillingModel: Item added to cart");
 				}
