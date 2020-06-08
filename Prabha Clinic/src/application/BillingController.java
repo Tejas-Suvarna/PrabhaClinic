@@ -56,7 +56,7 @@ public class BillingController implements Initializable{
 	ObservableList<Item> items;
 	String currentItemMaxQuantity = "0";
 	Boolean firstTimeItemSelect = true, nameFlag = true, qtyFlag=true, discFlag=true;
-	int sr = 1, discount = 0;
+	int sr = 1, discount;
 	
 	@FXML AnchorPane anchorPane;
 	@FXML ComboBox<String> itemComboBox;
@@ -117,7 +117,7 @@ public class BillingController implements Initializable{
 			
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				discountTextField.setText("0");
+				//discountTextField.setText("" + (Integer.parseInt(model.getItemPrice(itemComboBox.getSelectionModel().getSelectedIndex()))));
 				if(!quantityTextField.getText().equals("")) {
 					discountTextField.setEditable(true);
 				}
@@ -132,7 +132,7 @@ public class BillingController implements Initializable{
 								quantityTextField.setText(quantityTextField.getText().substring(0, quantityTextField.getText().length() - 1));
 							}
 						}
-						maxOfLabel.setText("/Max " + (Integer.parseInt(model.getItemPrice(itemComboBox.getSelectionModel().getSelectedIndex()))*Integer.parseInt(quantityTextField.getText())));
+						maxOfLabel.setText("/Max " + (Integer.parseInt(model.getItemPrice(itemComboBox.getSelectionModel().getSelectedIndex()))));
 					}
 					catch(NumberFormatException nfe) {
 						System.out.println("Number Format Exception handled");
@@ -154,7 +154,7 @@ public class BillingController implements Initializable{
 				setValueOfSupply();
 				try {							
 					if((Integer.parseInt(discountTextField.getText()) > (Integer.parseInt(model.getItemPrice(itemComboBox.getSelectionModel().getSelectedIndex()))))) {
-						while(Integer.parseInt(discountTextField.getText()) > Integer.parseInt(model.getItemPrice(itemComboBox.getSelectionModel().getSelectedIndex()))*Integer.parseInt(quantityTextField.getText())) {
+						while(Integer.parseInt(discountTextField.getText()) > Integer.parseInt(model.getItemPrice(itemComboBox.getSelectionModel().getSelectedIndex()))) {
 							discountTextField.setText(discountTextField.getText().substring(0, discountTextField.getText().length() - 1));
 							discount = Integer.parseInt(discountTextField.getText());
 						}
@@ -162,6 +162,7 @@ public class BillingController implements Initializable{
 				}
 				catch(NumberFormatException nfe) {
 					System.out.println("Number Format Exception handled");
+					valueOfSupplyLabel.setText("Value of Supply: 0");
 				}
 				catch(Exception e) {
 					notificationLabel.setText(e.toString());
@@ -439,7 +440,7 @@ public class BillingController implements Initializable{
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				try {
 					if(newValue) {
-						discountTextField.setText("0");
+						//discountTextField.setText("" + (Integer.parseInt(model.getItemPrice(itemComboBox.getSelectionModel().getSelectedIndex()))));
 						discount = 0;
 //						if(quantityTextField.getText().equals("") || quantityTextField.getText() == null) {
 //							if(Integer.parseInt(quantityTextField.getText()) > 0) {
@@ -489,7 +490,7 @@ public class BillingController implements Initializable{
 					}
 					else {
 						if(discountTextField.getText().equals("")) {
-							discountTextField.setText("0");
+							discountTextField.setText("" + (Integer.parseInt(model.getItemPrice(itemComboBox.getSelectionModel().getSelectedIndex()))));
 							discount = 0;
 						}
 					}
@@ -519,7 +520,7 @@ public class BillingController implements Initializable{
 		}
 		notificationLabel.setText("");
 		quantityTextField.setEditable(true);
-		discountTextField.setText("0");
+		discountTextField.setText("" + (Integer.parseInt(model.getItemPrice(itemComboBox.getSelectionModel().getSelectedIndex()))));
 		if(itemComboBox.getSelectionModel().getSelectedItem() != null) {
 			String price = model.getItemPrice(itemComboBox.getSelectionModel().getSelectedIndex());
 			setPriceLabel(price);
@@ -572,11 +573,11 @@ public class BillingController implements Initializable{
 	
 	public void setValueOfSupply() {
 		try {
-			int discount  = 0;
+			discount  = 0;
 			if(quantityTextField.getText().equals("")) {
 				valueOfSupplyLabel.setText("Value of Supply: ");
 			}
-			if(!discountTextField.getText().equals("") || discountTextField.getText() == null || Integer.parseInt(discountTextField.getText()) >= 0)
+			if(!discountTextField.getText().equals("") || discountTextField.getText() != null || Integer.parseInt(discountTextField.getText()) >= 0)
 				discount = Integer.parseInt(discountTextField.getText());
 			valueOfSupplyLabel.setText("Value of Supply: " + Integer.toString(Integer.parseInt(quantityTextField.getText()) * (discount)));
 		}
@@ -618,7 +619,7 @@ public class BillingController implements Initializable{
 	public void onDiscountTyped(KeyEvent ke) {
 		if(discFlag == false)
 			return;
-			discFlag = false;
+		discFlag = false;
 
 		
 	}

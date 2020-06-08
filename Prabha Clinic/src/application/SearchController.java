@@ -232,6 +232,9 @@ public class SearchController implements Initializable {
 		if(tableItems != null) {	
 			if(tableItems.isEmpty()) {
 				notificationLabel.setText("No results");
+			    for ( int i = 0; i< table.getItems().size(); i++) {
+			    	table.getItems().clear(); 
+			    } 
 			}
 			else table.setItems(tableItems);
 		}
