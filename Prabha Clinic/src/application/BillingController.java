@@ -461,7 +461,7 @@ public class BillingController implements Initializable{
 //						}
 					}
 				} catch (NumberFormatException e) {
-					System.out.println("Number Format Exception handled");
+					System.out.println("Number Format Exception handled"); 
 				}
 			}
 			
