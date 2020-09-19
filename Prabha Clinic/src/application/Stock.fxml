@@ -19,7 +19,7 @@
                   <TableColumn fx:id="batch_column" prefWidth="95.0" text="Batch" />
                   <TableColumn fx:id="qty_column" minWidth="0.0" prefWidth="100.0" text="Quantity" />
                   <TableColumn fx:id="mrp_column" prefWidth="95.0" text="MRP" />
-                  <TableColumn fx:id="price_column" prefWidth="85.0" text="Trade Price" />
+                  <TableColumn fx:id="price_column" prefWidth="85.0" text="Trade Price" visible="false" />
                   <TableColumn fx:id="date_column" prefWidth="105.0" text="Date Added" />
                </columns>
             </TableView>
@@ -77,8 +77,8 @@
                   <Font size="15.0" />
                </font>
             </Label>
-            <TextField fx:id="tradePriceTextField" layoutX="180.0" layoutY="302.0" onKeyTyped="#onTradePriceTyped" prefHeight="25.0" prefWidth="155.0" />
-            <Label layoutX="90.0" layoutY="304.0" prefHeight="21.0" prefWidth="75.0" text="Trade Price">
+            <TextField fx:id="tradePriceTextField" layoutX="180.0" layoutY="302.0" onKeyTyped="#onTradePriceTyped" prefHeight="25.0" prefWidth="155.0" text="0" visible="false" />
+            <Label layoutX="90.0" layoutY="304.0" prefHeight="21.0" prefWidth="75.0" text="Trade Price" visible="false">
                <font>
                   <Font size="15.0" />
                </font>

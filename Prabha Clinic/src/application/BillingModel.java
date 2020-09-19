@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -36,6 +37,7 @@ public class BillingModel {
 	ObservableList<String> itemPrices = FXCollections.observableArrayList();
 	ObservableList<String> itemQuantity = FXCollections.observableArrayList();
 	public int grandTotal;
+	float sgst,cgst;
 	
 	public BillingModel (){
 		formatter = new SimpleDateFormat("dd/MM/yyyy");  
@@ -46,14 +48,14 @@ public class BillingModel {
 	public ObservableList<String> getItemNameListAndLoadItemDetails() {
 		ObservableList<String> itemNames = FXCollections.observableArrayList();
 		connection = SQLiteConnection.Connector();
-		String query = "SELECT ITEM_NAME,PRICE,QUANTITY FROM ITEMS";
+		String query = "SELECT ITEM_NAME,MRP,QUANTITY FROM ITEMS";
 		Statement stmt;
 		try {
 			stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
 			while(rs.next()) {				
 				itemNames.add(rs.getString("ITEM_NAME"));
-				itemPrices.add(rs.getString("PRICE"));
+				itemPrices.add(rs.getString("MRP"));
 				itemQuantity.add(rs.getString("QUANTITY"));
 			}
 			connection.close();
@@ -221,13 +223,30 @@ public class BillingModel {
 		}
 		
 	}
+	
+	private void getGSTValuesFromDatabase() {
+		connection = SQLiteConnection.Connector();
+		String query = "SELECT SGST,CGST FROM FLAGS";
+		Statement stmt;
+		try {
+			stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery(query);				
+			sgst = Float.parseFloat(rs.getString("SGST"));
+			cgst = Float.parseFloat(rs.getString("CGST"));
+			connection.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		System.out.println("SettingsModel: CGST SGST retrieved from the Database");
+	}
+	
 
 	public void printBill(String billID,String name,String date,String valueInMoney,String grand) {
 		try {
-			
+				getGSTValuesFromDatabase();
 				InputStream in = new FileInputStream(new File("C:\\Users\\Public\\Blank_A4.jrxml"));
 				JasperDesign jd=JRXmlLoader.load(in);
-				String sql="SELECT ITEM_NAME,QUANTITY,PRICE,QUANTITY*PRICE AS AMT,DISCOUNT,QUANTITY*PRICE-DISCOUNT AS VALUE FROM CART WHERE BILL_ID = " + billID;
+				String sql="SELECT ITEM_NAME,QUANTITY,PRICE,QUANTITY*PRICE AS AMT,DISCOUNT,QUANTITY*PRICE-DISCOUNT AS VALUE, Field6 AS TP FROM CART WHERE BILL_ID = " + billID;
 				JRDesignQuery jdq = new JRDesignQuery();
 				jdq.setText(sql);
 				jd.setQuery(jdq);
@@ -237,6 +256,10 @@ public class BillingModel {
 				parameters.put("Date", date);
 				parameters.put("ValueInWords", valueInMoney + " only");
 				parameters.put("Grand", grand);
+				DecimalFormat numberFormat = new DecimalFormat("#.00");
+				parameters.put("GST", numberFormat.format((sgst+cgst)/100*Float.parseFloat(grand)));
+				parameters.put("GSTperc", Float.toString(sgst+cgst));
+				
 			    JasperReport js = JasperCompileManager.compileReport(jd);
 			    JasperPrint jasperPrint = JasperFillManager.fillReport(js,parameters, SQLiteConnection.Connector());
 			    JasperViewer.viewReport(jasperPrint,false);

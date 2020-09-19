@@ -17,12 +17,13 @@
       <TableView fx:id="table" layoutX="21.0" layoutY="175.0" prefHeight="200.0" prefWidth="609.0">
         <columns>
           <TableColumn fx:id="sr_column" prefWidth="31.0" text="Sr." />
-          <TableColumn fx:id="description_column" prefWidth="190.0" text="Description of Product" />
-            <TableColumn fx:id="qty_column" prefWidth="48.0" text="Qty" />
-            <TableColumn fx:id="rate_column" prefWidth="74.0" text="Rate/Tin" />
-            <TableColumn fx:id="amount_quantity" prefWidth="71.0" text="Amount" />
-            <TableColumn fx:id="less_discount_quantity" prefWidth="93.0" text="Less Discount" />
-            <TableColumn fx:id="value_of_supply_column" prefWidth="101.0" text="Value of Supply" />
+          <TableColumn fx:id="description_column" prefWidth="136.0" text="Description of Product" />
+            <TableColumn fx:id="qty_column" prefWidth="45.0" text="Qty" />
+            <TableColumn fx:id="rate_column" prefWidth="61.0" text="Rate/Tin" />
+            <TableColumn fx:id="trade_column" text="Trade Price" />
+            <TableColumn fx:id="amount_quantity" prefWidth="61.0" text="Amount" />
+            <TableColumn fx:id="less_discount_quantity" prefWidth="77.0" text="Discount" />
+            <TableColumn fx:id="value_of_supply_column" prefWidth="114.0" text="Value of Supply" />
         </columns>
       </TableView>
       <Label fx:id="toLabel" layoutX="22.0" layoutY="98.0" text="To:">

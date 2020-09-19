@@ -326,6 +326,7 @@ public class BillingController implements Initializable{
 				if(action.get() == ButtonType.OK) {
 					model.makeBill(nameTextField.getText().trim().toUpperCase(),table.getItems(),paymentDoneCheckBox.isSelected());
 				}
+				else return;
 				
 				AnchorPane pane;
 				try {
@@ -365,9 +366,10 @@ public class BillingController implements Initializable{
 //			return;
 //		}
 
-			float totAmt = Float.parseFloat(Integer.toString(Integer.parseInt(discountTextField.getText())*Integer.parseInt(quantityTextField.getText())));
+			float totAmt = Integer.parseInt(model.getItemPrice(itemComboBox.getSelectionModel().getSelectedIndex()))*Integer.parseInt(quantityTextField.getText());
+			@SuppressWarnings("unused")
 			float valueOfSupply = totAmt;	
-			Item item = new Item(Integer.toString(sr++), itemNames.get(itemComboBox.getSelectionModel().getSelectedIndex()), quantityTextField.getText(), model.getItemPrice(itemComboBox.getSelectionModel().getSelectedIndex()), Float.toString(totAmt), Integer.toString((Integer.parseInt(model.getItemPrice(itemComboBox.getSelectionModel().getSelectedIndex())) - discount)*(Integer.parseInt(quantityTextField.getText()))) ,Float.toString(valueOfSupply) , Integer.toString(discount));
+			Item item = new Item(Integer.toString(sr++), itemNames.get(itemComboBox.getSelectionModel().getSelectedIndex()), quantityTextField.getText(), model.getItemPrice(itemComboBox.getSelectionModel().getSelectedIndex()), Float.toString(totAmt), Integer.toString((Integer.parseInt(model.getItemPrice(itemComboBox.getSelectionModel().getSelectedIndex())) - discount)*(Integer.parseInt(quantityTextField.getText()))) ,Float.toString(discount*Integer.parseInt(quantityTextField.getText())) , discountTextField.getText()  );
 			if(!items.isEmpty()) {	
 				try {			
 					Item tempItem;
@@ -518,6 +520,7 @@ public class BillingController implements Initializable{
 			notificationLabel.setText("Stock Empty");
 			return;
 		}
+		maxOfLabel.setText("/Max " + (Integer.parseInt(model.getItemPrice(itemComboBox.getSelectionModel().getSelectedIndex()))));
 		notificationLabel.setText("");
 		quantityTextField.setEditable(true);
 		discountTextField.setText("" + (Integer.parseInt(model.getItemPrice(itemComboBox.getSelectionModel().getSelectedIndex()))));

@@ -117,17 +117,19 @@ public class StockModel {
 	}
 	
 	public void updateItemDetails(String itemNameTextField, String itemQuantityTextField,
-			String itemPriceTextField, String itemMRPTextField) throws SQLException {
+			String itemMRPTextField, String itemPriceTextField) throws SQLException {
 		
 		connection = SQLiteConnection.Connector();
 		String query = "UPDATE ITEMS SET ITEM_NAME = '" + itemNameTextField.toUpperCase() + "', PRICE = " + itemPriceTextField + ", QUANTITY = " + itemQuantityTextField + ", MRP = " + itemMRPTextField + " WHERE ITEM_NAME = (SELECT EDIT_ITEM FROM FLAGS);";
 		Statement stmt;
+		System.out.println(query);
 		stmt = connection.createStatement();
 		stmt.execute(query);
 		System.out.println("Add Or Edit Item Screen Model: Item edited");	
 		connection.close();
 		
 	}
+	
 	
 //	public void getItemToEdit(String item) {
 //		try {
@@ -152,6 +154,7 @@ public class StockModel {
 		try {
 			connection = SQLiteConnection.Connector();
 			String query = "UPDATE FLAGS SET EDIT_ITEM = '" + selectedItem + "'";
+			System.out.println(query);
 			Statement stmt = connection.createStatement();
 			stmt.executeUpdate(query);
 			System.out.println("StockModel: EDIT_ITEM Flag Updated");	

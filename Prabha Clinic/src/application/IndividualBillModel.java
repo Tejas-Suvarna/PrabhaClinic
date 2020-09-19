@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +29,7 @@ public class IndividualBillModel {
 	String dateString, invoice;
 	String billNo, toLabelText, dateLabelText, grandTotalText, paymentStatusText;
 	ObservableList<Item> items = FXCollections.observableArrayList();
+	float sgst,cgst;
 
 	public IndividualBillModel (String billNo){
 		this.billNo = new String(billNo);
@@ -49,6 +51,22 @@ public class IndividualBillModel {
 		System.out.println("IndividualBillModel: Bill Model has retrieved bill details from Database");
 	}
 	
+	private void getGSTValuesFromDatabase() {
+		connection = SQLiteConnection.Connector();
+		String query = "SELECT SGST,CGST FROM FLAGS";
+		Statement stmt;
+		try {
+			stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery(query);				
+			sgst = Float.parseFloat(rs.getString("SGST"));
+			cgst = Float.parseFloat(rs.getString("CGST"));
+			connection.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		System.out.println("SettingsModel: CGST SGST retrieved from the Database");
+	}
+	
 	public void printBill(String billID,String name,String date,String valueInMoney,String grand) {
 		try {
 		/*	System.out.println(getClass().getResource("Blank_A4.jrxml").getPath());
@@ -67,10 +85,10 @@ public class IndividualBillModel {
 			
 			
 			//C:/Users/tejas/eclipse-workspace/Prabha%20Clinic/bin/application/Blank_A4.jrxml
-
+				getGSTValuesFromDatabase();
 				InputStream in = new FileInputStream(new File("C:\\Users\\Public\\Blank_A4.jrxml"));
 				JasperDesign jd=JRXmlLoader.load(in);
-				String sql="SELECT ITEM_NAME,QUANTITY,PRICE,QUANTITY*PRICE AS AMT,DISCOUNT,QUANTITY*PRICE-DISCOUNT AS VALUE FROM CART WHERE BILL_ID = " + billID;
+				String sql="SELECT ITEM_NAME,QUANTITY,PRICE,QUANTITY*PRICE AS AMT,DISCOUNT,QUANTITY*PRICE-DISCOUNT AS VALUE, Field6 AS TP FROM CART WHERE BILL_ID = " + billID;
 				System.out.println(billID+name+date+valueInMoney+grand+"\n"+sql);
 				JRDesignQuery jdq = new JRDesignQuery();
 				jdq.setText(sql);
@@ -81,6 +99,9 @@ public class IndividualBillModel {
 				parameters.put("Date", date);
 				parameters.put("ValueInWords", valueInMoney);
 				parameters.put("Grand", grand);
+				parameters.put("GSTperc", Float.toString(sgst+cgst));
+				DecimalFormat numberFormat = new DecimalFormat("#.00");
+				parameters.put("GST", numberFormat.format((sgst+cgst)/100*Float.parseFloat(grand)));
 			    JasperReport js = JasperCompileManager.compileReport(jd);
 			    JasperPrint jasperPrint = JasperFillManager.fillReport(js,parameters, SQLiteConnection.Connector());
 			    JasperViewer.viewReport(jasperPrint,false);
@@ -118,6 +139,8 @@ public class IndividualBillModel {
 				item.setAmt(Integer.toString(Integer.parseInt(item.getQty()) * Integer.parseInt(item.getRate()))); 
 				item.setDst(Integer.toString(rs.getInt("DISCOUNT")));
 				item.setValue(Integer.toString(Integer.parseInt(item.getQty()) * Integer.parseInt(item.getRate()) - Integer.parseInt(item.getDst())));
+				item.setTrade(Integer.toString(Integer.parseInt(item.getRate()) - Integer.parseInt(item.getDst())/Integer.parseInt(item.getQty())));
+				//System.out.println(item.getTrade());
 				
 				items.add(item);
 			}

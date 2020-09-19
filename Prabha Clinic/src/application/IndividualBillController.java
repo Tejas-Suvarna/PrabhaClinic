@@ -26,6 +26,7 @@ public class IndividualBillController implements Initializable{
 	@FXML	TableColumn<Item,String> amount_quantity;
 	@FXML	TableColumn<Item,String> less_discount_quantity;
 	@FXML	TableColumn<Item,String> value_of_supply_column;
+	@FXML	TableColumn<Item,String> trade_column;
 
 	
 	String billNo;
@@ -58,6 +59,7 @@ public class IndividualBillController implements Initializable{
 		amount_quantity.setCellValueFactory(cellData -> cellData.getValue().amtProperty());
 		less_discount_quantity.setCellValueFactory(cellData -> cellData.getValue().dstProperty());
 		value_of_supply_column.setCellValueFactory(cellData -> cellData.getValue().valueProperty());
+		trade_column.setCellValueFactory(cellData -> cellData.getValue().tradeProperty());
 	}
 
 	public void setBillNo(String billNo) {
@@ -67,6 +69,7 @@ public class IndividualBillController implements Initializable{
 		table.setItems(items);
 		initializeLabels();
 	}
+	
 	public void onPrintClick() {
 		model.printBill(model.getInvoiceLabelText(), model.getToLabelText(), model.getDateLabelText(), NumberToWordsConverter.convert(Integer.parseInt(model.getGrandTotalText().trim())), model.getGrandTotalText());
 	}
